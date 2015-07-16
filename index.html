@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Sepia – Notes on the test lab for the Ceph project &mdash; Sepia -- Notes on the test lab for the Ceph project</title>
+    
+    <link rel="stylesheet" href="_static/sepia.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     'dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Sepia -- Notes on the test lab for the Ceph project" href="#" />
+    <link rel="next" title="Servers" href="servers/" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="servers/" title="Servers"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Sepia -- Notes on the test lab for the Ceph project</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sepia-notes-on-the-test-lab-for-the-ceph-project">
+<h1>Sepia &#8211; Notes on the test lab for the Ceph project<a class="headerlink" href="#sepia-notes-on-the-test-lab-for-the-ceph-project" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="http://ceph.com/">Ceph</a> is a unified, distributed storage system that operates on a large
+number of hosts connected by a TCP/IP network.</p>
+<p><cite>Sepia</cite> is the name we gave to our pool of test machines. It happens
+to be both a color and a <a class="reference external" href="http://en.wikipedia.org/wiki/Sepia_(genus)">genus of cuttlefish</a>. When we have
+different kinds of hardware in the <cite>sepia</cite> pool, we name them after
+individual species in the <em>sepia</em> genus, for example <a class="reference external" href="http://en.wikipedia.org/wiki/Sepia_plana">sepia plana</a>.</p>
+<p>This repository contains notes on managing and using the &#8220;Sepia&#8221; lab
+of test machines, used by the Ceph project. It is managed as a Sphinx
+document tree and stored in a Git repository, to provide a combination
+of easy editability, searchability and developer friendliness.</p>
+<p>The target audience for this documentation is administrators; people
+<strong>managing</strong> the sepia machines. If all you need is to access the
+machines, you probably don&#8217;t need to know any of this.</p>
+<p>While the Sepia machines are not publicly accessible, we hope to share
+tools &amp; knowledge with the greater community. If you are an
+independent developer working on Ceph or related projects &#8211; such as
+Ceph integration to OpenStack &#8211; do contact us and we might be able to
+give you access to the hardware resources of the <cite>sepia</cite> lab. Or an
+offer of employment ;)</p>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="servers/">Servers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="servers/plana/">Plana</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers/mira/">Mira</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers/burnupi/">Burnupi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers/vercoi/">Vercoi</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="servers/vercoi/megaraid/">MegaRAID for Vercoi</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="servers/senta/">Senta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers/apama/">apama001 - apama002</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers/rhoda/">rhoda01 - rhoda04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers/tala-saya/">Tala and Saya</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers/irvingi/">irvingi01 - irvingi08</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers/misc/">Misc Servers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers/#networking-hardware">Networking hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers/#rdma">RDMA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers/#fast-storage">Fast Storage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bios/">BIOS settings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bios/#on-plana">On plana</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="drac/">Dell&#8217;s DRAC out-of-band management system</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="drac/remote-console-focus/">Remote console loses keyboard focus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drac/remote-console-integration/">Remote console doesn&#8217;t launch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="drac/remote-console-integration/#on-plana">On <cite>plana</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="drac/remote-console-integration/#on-vercoi">On <cite>vercoi</cite></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="drac/remote-console-keys/">Arrow keys etc don&#8217;t work in DRAC remote console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drac/serial-console-in-use/">How to fix serial console in use error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drac/ssh-keys/">SSH RSA keys must be &lt;=2047 bits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drac/ssl-certs/">Browser Refuses SSL Certificates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="drac/ssl-certs/#problem">Problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drac/ssl-certs/#workaround">Workaround</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drac/ssl-certs/#fix">Fix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drac/ssl-certs/#resources">Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network/">Network</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network/#vlans">VLANs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="adding_users/">Requesting Lab Access</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adding_users/#setting-up-vpn-client">Setting up VPN client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adding_users/#mac-tunnelblick">Mac/Tunnelblick</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="adding_users/#adding-users-lab-admins">Adding users (lab admins)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gitbuilder/">Notes creating gitbuilder-ceph-rpm-fedora22-amd64-basic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipmi/">Using IPMI on physical machines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ipmi/#power-cycling">Power cycling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ipmi/#serial-console">Serial console</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="new_user/">New user basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_user/#set-up-teuthology">Set up teuthology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="new_user/#lock-an-individual-machine">Lock an individual machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="new_user/#safely-clean-up-and-unlock-a-machine">Safely clean up and unlock a machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="new_user/#run-a-job-on-a-single-machine">Run a job on a single machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="new_user/#view-the-queue">View the queue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="new_user/#submit-a-job-to-the-queue">Submit a job to the queue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="new_user/#schedule-a-test-suite">Schedule a test suite</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="serial-console/">Using serial consoles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="serial-console/#on-plana">On <cite>plana</cite></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vps/">VMs and containers</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="#">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="servers/">Servers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bios/">BIOS settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drac/">Dell&#8217;s DRAC out-of-band management system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="network/">Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adding_users/">Requesting Lab Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adding_users/#adding-users-lab-admins">Adding users (lab admins)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gitbuilder/">Notes creating gitbuilder-ceph-rpm-fedora22-amd64-basic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipmi/">Using IPMI on physical machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="new_user/">New user basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serial-console/">Using serial consoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vps/">VMs and containers</a></li>
+</ul>
+
+
+<!-- ugly kludge to make genindex look like it's part of the toc -->
+<ul style="margin-top: -10px"><li class="toctree-l1"><a class="reference internal" href="genindex/">Index</a></li></ul>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search/" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="servers/" title="Servers"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Sepia -- Notes on the test lab for the Ceph project</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2012, New Dream Network.
+    </div>
+  </body>
+</html>

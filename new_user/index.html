@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>New user basics &mdash; Sepia -- Notes on the test lab for the Ceph project</title>
+    
+    <link rel="stylesheet" href="../_static/sepia.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Sepia -- Notes on the test lab for the Ceph project" href="../" />
+    <link rel="next" title="Using serial consoles" href="../serial-console/" />
+    <link rel="prev" title="Using IPMI on physical machines" href="../ipmi/" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../serial-console/" title="Using serial consoles"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../ipmi/" title="Using IPMI on physical machines"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../">Sepia -- Notes on the test lab for the Ceph project</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="new-user-basics">
+<h1>New user basics<a class="headerlink" href="#new-user-basics" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="set-up-teuthology">
+<h2>Set up teuthology<a class="headerlink" href="#set-up-teuthology" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Log in to teuthology.front.sepia.ceph.com</p>
+</li>
+<li><p class="first">Clone teuthology:</p>
+<div class="highlight-python"><div class="highlight"><pre>mkdir src
+cd src
+git clone git@github.com:ceph/teuthology
+cd teuthology
+./bootstrap
+</pre></div>
+</div>
+</li>
+<li><p class="first">[Optional] Add $HOME/src/teuthology/virtualenv/bin to your path.</p>
+</li>
+<li><p class="first">Verify it it working:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">teuthology</span><span class="o">-</span><span class="n">lock</span> <span class="o">--</span><span class="n">summary</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Clone ceph-qa-suite:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd ~/src
+git clone git@github.com:ceph/ceph-qa-suite
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="lock-an-individual-machine">
+<h2>Lock an individual machine<a class="headerlink" href="#lock-an-individual-machine" title="Permalink to this headline">¶</a></h2>
+<p>Lock a machine.  Optionally specify the OS type/version.:</p>
+<div class="highlight-python"><div class="highlight"><pre>teuthology-lock --lock-many 1 --machine-type plana,mira,burnupi | tee mine.yaml
+</pre></div>
+</div>
+</div>
+<div class="section" id="safely-clean-up-and-unlock-a-machine">
+<h2>Safely clean up and unlock a machine<a class="headerlink" href="#safely-clean-up-and-unlock-a-machine" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Get the bit of yaml for your machine, if you don&#8217;t already have it handy:</p>
+<div class="highlight-python"><div class="highlight"><pre>teuthology-lock --list-targets | tee mine.yaml
+</pre></div>
+</div>
+</li>
+<li><p class="first">Nuke, remove, and unlock:</p>
+<div class="highlight-python"><div class="highlight"><pre>teuthology-nuke -t mine.yaml -r -u
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="run-a-job-on-a-single-machine">
+<h2>Run a job on a single machine<a class="headerlink" href="#run-a-job-on-a-single-machine" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Write a job file to a foo.yaml.</p>
+</li>
+<li><p class="first">Get a machine for it:</p>
+<div class="highlight-python"><div class="highlight"><pre>teuthology-lock --lock-many NUM --machine-type plana,mira,burnupi &gt;&gt; foo.yaml
+</pre></div>
+</div>
+</li>
+<li><p class="first">Run the test:</p>
+<div class="highlight-python"><div class="highlight"><pre>teuthology -v foo.yaml -a foo.yaml.out
+</pre></div>
+</div>
+</li>
+<li><p class="first">If it fails, clean up the machine and/or run output:</p>
+<div class="highlight-python"><div class="highlight"><pre>teuthology-nuke -t foo.yaml
+rm -r foo.yaml.out
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="view-the-queue">
+<h2>View the queue<a class="headerlink" href="#view-the-queue" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">From the CLI:</p>
+<div class="highlight-python"><div class="highlight"><pre>teuthology-queue -m multi
+</pre></div>
+</div>
+</li>
+<li><p class="first">From the web:</p>
+<div class="highlight-python"><div class="highlight"><pre>http://pulpito.ceph.com/
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="submit-a-job-to-the-queue">
+<h2>Submit a job to the queue<a class="headerlink" href="#submit-a-job-to-the-queue" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre>teuthology-schedule myjob.yaml -n myjob -m multi -N NUM
+</pre></div>
+</div>
+</div>
+<div class="section" id="schedule-a-test-suite">
+<h2>Schedule a test suite<a class="headerlink" href="#schedule-a-test-suite" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Schedule.  Note that the kernel branch is optional (you can use
+whatever kernel happens to be installed on the machine).</p>
+<div class="highlight-python"><div class="highlight"><pre>teuthology-suite -s SUITE -c CEPHBRANCH [-k KERNELBRANCH]
+</pre></div>
+</div>
+<p>Part of the output will be the run name, something like:</p>
+<div class="highlight-python"><div class="highlight"><pre>zack-2014-07-30_13:33:27-rados-firefly-testing-basic-multi
+</pre></div>
+</div>
+<p>Or, to find results from a previous run,:</p>
+<div class="highlight-python"><div class="highlight"><pre>ls /a/ | grep $USER
+</pre></div>
+</div>
+</li>
+<li><p class="first">View results:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cd</span> <span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">RUNNAME</span>
+<span class="n">ls</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../servers/">Servers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bios/">BIOS settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drac/">Dell&#8217;s DRAC out-of-band management system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/">Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../adding_users/">Requesting Lab Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../adding_users/#adding-users-lab-admins">Adding users (lab admins)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gitbuilder/">Notes creating gitbuilder-ceph-rpm-fedora22-amd64-basic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ipmi/">Using IPMI on physical machines</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">New user basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-teuthology">Set up teuthology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lock-an-individual-machine">Lock an individual machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#safely-clean-up-and-unlock-a-machine">Safely clean up and unlock a machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-a-job-on-a-single-machine">Run a job on a single machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#view-the-queue">View the queue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#submit-a-job-to-the-queue">Submit a job to the queue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#schedule-a-test-suite">Schedule a test suite</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../serial-console/">Using serial consoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vps/">VMs and containers</a></li>
+</ul>
+
+
+<!-- ugly kludge to make genindex look like it's part of the toc -->
+<ul style="margin-top: -10px"><li class="toctree-l1"><a class="reference internal" href="../genindex/">Index</a></li></ul>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../serial-console/" title="Using serial consoles"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../ipmi/" title="Using IPMI on physical machines"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../">Sepia -- Notes on the test lab for the Ceph project</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2012, New Dream Network.
+    </div>
+  </body>
+</html>

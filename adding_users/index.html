@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Requesting Lab Access &mdash; Sepia -- Notes on the test lab for the Ceph project</title>
+    
+    <link rel="stylesheet" href="../_static/sepia.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Sepia -- Notes on the test lab for the Ceph project" href="../" />
+    <link rel="next" title="Notes creating gitbuilder-ceph-rpm-fedora22-amd64-basic" href="../gitbuilder/" />
+    <link rel="prev" title="Network" href="../network/" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../gitbuilder/" title="Notes creating gitbuilder-ceph-rpm-fedora22-amd64-basic"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../network/" title="Network"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../">Sepia -- Notes on the test lab for the Ceph project</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="requesting-lab-access">
+<h1>Requesting Lab Access<a class="headerlink" href="#requesting-lab-access" title="Permalink to this headline">¶</a></h1>
+<p>Send a lab admin an email with two pieces of information:</p>
+<ol class="arabic">
+<li><p class="first">A public SSH key.  You may already have this (cat
+~/.ssh/id_rsa.pub).  If necessary, you can create a new one on the
+machine you will be connecting from with:</p>
+<div class="highlight-python"><div class="highlight"><pre>ssh-keygen -t rsa
+</pre></div>
+</div>
+</li>
+<li><p class="first">A VPN secret.  See below for how to set this up:</p>
+</li>
+</ol>
+<div class="section" id="setting-up-vpn-client">
+<h2>Setting up VPN client<a class="headerlink" href="#setting-up-vpn-client" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Install openvpn:</p>
+<div class="highlight-python"><div class="highlight"><pre>apt-get install openvpn
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-python"><div class="highlight"><pre>yum install -y openvpn
+</pre></div>
+</div>
+</li>
+<li><p class="first">Get the tarball and extract it:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd /etc/openvpn
+wget http://ceph.com/sage/sepia-vpn-client.tar.gz
+tar zxvf sepia-vpn.client.tar.gz
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a new key.  Please use a descriptive user and host below so
+that both you and the lab admins can identify who you are (e.g.,
+<a class="reference external" href="mailto:sage&#37;&#52;&#48;flab">sage<span>&#64;</span>flab</a>):</p>
+<div class="highlight-python"><div class="highlight"><pre>sepia/new-client USER@HOST
+</pre></div>
+</div>
+</li>
+<li><p class="first">Send us the private key.</p>
+</li>
+<li><p class="first">Once everything is set at the lab, you can start the VPN with:</p>
+<div class="highlight-python"><div class="highlight"><pre>service openvpn start
+</pre></div>
+</div>
+<p>or similar (depending on your distro).</p>
+</li>
+</ol>
+</div>
+<div class="section" id="mac-tunnelblick">
+<h2>Mac/Tunnelblick<a class="headerlink" href="#mac-tunnelblick" title="Permalink to this headline">¶</a></h2>
+<p>If using Mac/Tunnelblick, this is a way that&#8217;s been found to work; it
+may not be the only way:</p>
+<ol class="arabic">
+<li><p class="first">comment out (add a leading &#8216;#&#8217; to) the line in /etc/openvpn/sepia.conf that mentions &#8216;secret&#8217;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># auth-user-pass sepia.client/secret</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">add a new line that contains only:</p>
+<div class="highlight-python"><div class="highlight"><pre>auth-user-pass
+</pre></div>
+</div>
+</li>
+<li><p class="first">connect with Tunnelblick</p>
+</li>
+<li><p class="first">when prompted for user/pass, enter username <a class="reference external" href="mailto:MYUSERNAME&#37;&#52;&#48;MYHOST">MYUSERNAME<span>&#64;</span>MYHOST</a> as above, and for password use the secret contents of the file /etc/openvpn/sepia.client/secret, (do not use the username)</p>
+</li>
+<li><p class="first">click the &#8220;Save to keychain&#8221; box.</p>
+</li>
+</ol>
+<p>(Alternatively command line openvpn can be used as well with the mac os X tun/tap driver).</p>
+</div>
+</div>
+<div class="section" id="adding-users-lab-admins">
+<h1>Adding users (lab admins)<a class="headerlink" href="#adding-users-lab-admins" title="Permalink to this headline">¶</a></h1>
+<ol class="arabic">
+<li><p class="first">Install VPN key on the gateway.</p>
+</li>
+<li><p class="first">Add the SSH key to
+ceph-sepia-secrets.git/ansible/inventory/group_vars/all.yml.  Add
+to teh <cite>lab_users</cite> section.  Submit a pull request.</p>
+</li>
+<li><p class="first">Create a user on teuthology.front.sepia.ceph.com:</p>
+<div class="highlight-python"><div class="highlight"><pre>adduser --disabled-password USER
+cd /home/USER
+mkdir .ssh
+cat &gt; .ssh/authorized_keys
+&lt;ssh key&gt;
+^D
+chown -R --reference=. .ssh
+chmod 700 .ssh
+chmod 600 .ssh/*
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../servers/">Servers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bios/">BIOS settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drac/">Dell&#8217;s DRAC out-of-band management system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network/">Network</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Requesting Lab Access</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-vpn-client">Setting up VPN client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mac-tunnelblick">Mac/Tunnelblick</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#adding-users-lab-admins">Adding users (lab admins)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gitbuilder/">Notes creating gitbuilder-ceph-rpm-fedora22-amd64-basic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ipmi/">Using IPMI on physical machines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../new_user/">New user basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../serial-console/">Using serial consoles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vps/">VMs and containers</a></li>
+</ul>
+
+
+<!-- ugly kludge to make genindex look like it's part of the toc -->
+<ul style="margin-top: -10px"><li class="toctree-l1"><a class="reference internal" href="../genindex/">Index</a></li></ul>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../gitbuilder/" title="Notes creating gitbuilder-ceph-rpm-fedora22-amd64-basic"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../network/" title="Network"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../">Sepia -- Notes on the test lab for the Ceph project</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2012, New Dream Network.
+    </div>
+  </body>
+</html>
